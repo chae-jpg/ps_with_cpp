@@ -37,7 +37,7 @@ int main() {
     }
     else {
         unsigned long long sum = min_three * 4 + min_two * (8 * n - 12);
-        unsigned long long sum_part = min_one * (5 * (long long)n * n - 16 * n + 12);
+        unsigned long long sum_part = min_one * (5 * (long long)n * n - 16 * n + 12);    //형 변환 이렇게 숫자 바로 앞에 붙여야 적용됨!!
         cout << sum + sum_part;
     }
 
