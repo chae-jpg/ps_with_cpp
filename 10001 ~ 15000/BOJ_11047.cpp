@@ -10,7 +10,7 @@ int main() {
     arr.assign(n, 0);
 
     while(n--) {
-        cin >> arr[n-1];
+        cin >> arr[n];
     }
 
     while (k) {
