@@ -85,5 +85,6 @@ int main() {
 
         if (n) split(str);
         oper(p);
+
     }
 }
