@@ -3,46 +3,67 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
-#include <vector>
+#include <deque>
 
 using namespace std;
 
-void split(string& str, vector<int>& arr) {
-    int pos = 0;
-    str.erase(str.begin());
+deque<int> d;
 
-    while ((pos = str.find_first_of("[,]")) != string::npos) {
-        string s = str.substr(0, pos);
-        str.erase(0, pos+1);
-        arr.push_back(stoi(s));
+void split(string& str) {
+    string num = "";
+    for (auto c : str) {
+        switch (c) {
+            case '[' :
+                break;
+            case ',' : case ']' :
+                d.push_back(stoi(num));
+                num.clear();
+                break;
+            default :
+                num += c;
+        }
     }
 }
 
-string oper(string& func, vector<int>& arr) {
+void oper(string& func) {
     string answer = "";
+    bool r_flag = false;
+
     for (auto c : func) {
         if (c == 'R') {
-            reverse(arr.begin(), arr.end());
+            r_flag = !r_flag;
         } else {
-            if (arr.empty()) {
+            if (d.empty()) {
                 answer = "error";
-                return answer;
-            } else {
-                arr.erase(arr.begin());
+                cout << answer << '\n';
+                return;
             }
+            if (r_flag) d.pop_back();
+            else d.pop_front();
         }
     }
-    answer += '[';
+    if (d.empty()) {
+        answer = "[]";
+        cout << answer << '\n';
+        return;
+    }
+    cout << "[";
 
-    if (!arr.empty()) {
-        for (int i : arr) {
-            answer += to_string(i);
-            answer += ",";
+    if (!r_flag) {
+        for (auto iter = d.begin(); iter != d.end() -1; iter++) {
+            cout << to_string(*iter) << ',';
         }
+        cout << to_string(d.back());
+    } else {
+        for (auto iter = d.rbegin(); iter != d.rend() -1; iter++) {
+            cout << to_string(*iter) << ',';
+        }
+        cout << to_string(d.front());
     }
-    answer.erase(answer.end() - 1);
-    answer += "]";
-    return answer;
+
+
+    cout << ']' << '\n';
+    return;
 }
 
 int main() {
@@ -54,14 +75,15 @@ int main() {
     cin >> t;
 
     while (t--) {
-        int temp;
-        string func, str;
-        vector<int> arr;
+        d.clear();
+        string p;
+        int n;
+        char c;
+        string str;
 
-        cin >> func;
-        cin >> temp;
-        cin >> str;
-        if (temp) split(str, arr);
-        cout << oper(func, arr) << '\n';
+        cin >> p >> n >> c >> str;
+
+        if (n) split(str);
+        oper(p);
     }
 }
