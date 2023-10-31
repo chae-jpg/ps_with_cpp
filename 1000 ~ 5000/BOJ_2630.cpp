@@ -5,85 +5,24 @@ using namespace std;
 
 typedef pair<int, int> pi;
 
-int cnt = 0;
+int blue_cnt = 0, white_cnt = 0;
 
-void divideSquare (vector<vector<bool>>& arr, pi left_top, pi right_down) {
-    int h_mid = (left_top.first + right_down.first)/2, w_mid = (left_top.second + right_down.second)/2;
-    bool check, flag = true;
-    //왼쪽 위
-    check = arr[left_top.first][left_top.second];
-    for (int i = left_top.first; i < h_mid; i++) {
-        for (int j = left_top.second; j < w_mid; j++) {
-            if (arr[i][j] != check) {
-                flag = false;
-                divideSquare(arr, left_top, {h_mid, w_mid});
-                break;
-            }
-            if (!flag) {
-                break;
+void checkSquare(int n, pi l, const vector<vector<bool>>& arr) {
+    bool cmp = arr[l.first][l.second];
+    for (int i = l.first; i < l.first + n; i++) {
+        for (int j = l.second; j < l.second + n; j++) {
+            if (arr[i][j] != cmp) {
+                checkSquare(n/2, l, arr);
+                checkSquare(n/2, {l.first, l.second + n/2}, arr);
+                checkSquare(n/2, {l.first + n/2, l.second}, arr);
+                checkSquare(n/2, {l.first + n/2, l.second + n/2}, arr);
+                return;
             }
         }
     }
-    if (flag) {
-        cnt++;
-    }
-    flag = true;
-
-    //오른쪽 위
-    check = arr[left_top.first][w_mid];
-    for (int i = left_top.first; i < h_mid; i++) {
-        for (int j = w_mid; j < right_down.second; j++) {
-            if (arr[i][j] != check) {
-                flag = false;
-                divideSquare(arr, {left_top.first, w_mid}, {h_mid, right_down.second});
-                break;
-            }
-            if (!flag) {
-                break;
-            }
-        }
-    }
-    if (flag) {
-        cnt++;
-    }
-    flag = true;
-
-    //왼쪽 아래
-    check = arr[h_mid][left_top.second];
-    for (int i = h_mid; i < right_down.first; i++) {
-        for (int j = left_top.second; j < w_mid; j++) {
-            if (arr[i][j] != check) {
-                flag = false;
-                divideSquare(arr, {h_mid, left_top.second}, {right_down.first, w_mid});
-                break;
-            }
-            if (!flag) {
-                break;
-            }
-        }
-    }
-    if (flag) {
-        cnt++;
-    }
-    flag = true;
-
-    //오른쪽 아래
-    check = arr[h_mid][w_mid];
-    for (int i = h_mid; i < right_down.first; i++) {
-        for (int j = w_mid; j < right_down.second; j++) {
-            if (arr[i][j] != check) {
-                flag = false;
-                divideSquare(arr, {h_mid, w_mid}, right_down);
-                break;
-            }
-            if (!flag) {
-                break;
-            }
-        }
-    }
-    if (flag) {
-        cnt++;
-    }
+    if (cmp) blue_cnt++;
+    else white_cnt++;
+    return;
 }
 
 int main() {
@@ -98,9 +37,7 @@ int main() {
             arr[i][j] = t;
         }
     }
-
-    divideSquare(arr, {0, 0}, {n, n});
-
-    cout << cnt;
+    checkSquare(n, {0, 0}, arr);
+    cout << white_cnt << '\n' << blue_cnt;
 
 }
