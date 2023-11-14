@@ -6,10 +6,10 @@ long long a, b, c;
 
 long long exp(long long x, long long n) {
     if (!n) return 1;
-    if (!(n % 2)) {
-        return exp(x*x%c, n/2);
-    }
-    return exp(x*x%c, (n-1)/2);
+    long long u = exp(x, n/2);
+    u = (u * u) % c;
+    if (n%2) u = (u*x)%c;
+    return u;
 }
 
 int main() {
