@@ -20,6 +20,7 @@ int main() {
         cin >> sushi[i];
     }
 
+    //초기 세팅
     int l = 0, r = k-1, cnt = 0;
     for (int i = l; i <= r; i++) {
         if (!ate[sushi[i]]) {
@@ -35,22 +36,28 @@ int main() {
     while (r < n-1) {
         l++; r++;
         ate[sushi[l-1]]--;
+        //전 접시가 이번에 없으면 -> 카운트 감소.
         if (!ate[sushi[l-1]]) cnt--;
+        //새 접시가 전에 없었으면 -> 카운트 증가.
         if (!ate[sushi[r]]) cnt++;
         ate[sushi[r]]++;
         if (!ate[c]) cnt++;
         answer = max(answer, cnt);
+        //원상복구
         if (!ate[c]) cnt--;
     }
     r = 0, l++;
     //l : 끝까지
     while (l < n) {
         ate[sushi[l-1]]--;
+        //전 접시가 이번에 없으면 -> 카운트 감소.
         if (!ate[sushi[l-1]]) cnt--;
+        //새 접시가 전에 없었으면 -> 카운트 증가.
         if (!ate[sushi[r]]) cnt++;
         ate[sushi[r]]++;
         if (!ate[c]) cnt++;
         answer = max(answer, cnt);
+        //원상복구
         if (!ate[c]) cnt--;
         l++; r++;
     }
