@@ -10,52 +10,43 @@ int main() {
     stack<char> ans, t;
     stack<int> check;
     cin >> str >> target;
+    int t_l = target.length();
 
-    for (int i = 0; i < str.length(); i++) {
-        if (str[i] == target[0]) {
-            if (target.length() == 1) continue;
-            check.push(0);
-            ans.push(str[i]);
-            continue;
-        }
-        ans.push(str[i]);
-
-        if (!check.empty()) {
-            if (target[check.top()+1] == str[i]) check.push(check.top()+1);
-            else {
-                while(check.top()) {
-                    check.pop();
+    for (char c : str) {
+        if (c == target[t_l-1]) {
+            for (int i = t_l-2; i >= 0; i--) {
+                if (!ans.empty() && ans.top() == target[i]) {
+                    t.push(ans.top());
+                    ans.pop();
                 }
-                check.pop();
+                else {
+                    while (!t.empty()) {
+                        ans.push(t.top());
+                        t.pop();
+                    }
+                    ans.push(c);
+                    break;
+                }
             }
-        }
-        if (!check.empty() && check.top() == target.length()-1) {
-            for (int j = 0; j < target.size(); j++) ans.pop();
-            while(check.top()) check.pop();
-            check.pop();
+            if (!t.empty() && t.size() == t_l-1) {
+                while (!t.empty()) t.pop();
+            }
+        } else {
+            ans.push(c);
         }
     }
     if (ans.empty()) {
-        if (check.empty()) cout << "FRULA";
-        else {
-            while (!check.empty()) {
-                t.push(target[check.top()]);
-                check.pop();
-            }
-            while (!t.empty()) {
-                cout << t.top();
-                t.pop();
-            }
-        }
-    } else {
-        while (!ans.empty()) {
-            t.push(ans.top());
-            ans.pop();
-        }
-        while (!t.empty()) {
-            cout << t.top();
-            t.pop();
-        }
+        cout << "FRULA";
+        return 0;
+    }
+
+    while (!ans.empty()) {
+        t.push(ans.top());
+        ans.pop();
+    }
+    while (!t.empty()) {
+        cout << t.top();
+        t.pop();
     }
 
 }
