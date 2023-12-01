@@ -1,74 +1,71 @@
-#include <iostream>
-#include <vector>
-#include <queue>
+//루머 - 골드 4
+
+#include <bits/stdc++.h>
 
 using namespace std;
 
 typedef pair<int, int> pi;
 
-int main() {
-    ios_base ::sync_with_stdio(false);
-    cin.tie(NULL); cout.tie(NULL);
+int n, m;
+vector<vector<int>> rel;
+vector<bool> rumor;
+vector<int> ans;
+queue<pi> q;
 
-    int n, m, t;
-    vector<vector<int>> relation;
-    vector<int> answer;
-    vector<int> trust_cnt;
-    vector<bool> trust;
-    queue<int> check;
-
-    cin >> n;
-    relation.assign(n + 1, vector<int>(0));
-    trust.assign(n+1, false);
-    trust_cnt.assign(n+1, 0);
-    answer.assign(n+1, 0);
-
+void solve() {
+    int time = 0;
     for (int i = 1; i <= n; i++) {
-        while (cin >> t && t != 0) {
-            relation[i].push_back(t);
+        if (rumor[i]) {
+            q.push({i, 0});
+            ans[i] = 0;
         }
     }
 
+    while (!q.empty()) {
+        int spoiler = q.front().first;
+        time = q.front().second;
+        q.pop();
+
+        for (int target : rel[spoiler]) {
+            if (rumor[target]) continue;
+            int ppl_cnt = rel[target].size(), r_cnt = 0;
+            for (int t_rel : rel[target]) {
+                if (time+1 != ans[t_rel] && rumor[t_rel]) r_cnt++;
+            }
+            if (r_cnt >= (ppl_cnt+1)/2) {
+                q.push({target, time + 1});
+                ans[target] = time+1;
+                rumor[target] = true;
+            }
+        }
+
+
+
+    }
+
+}
+
+int main() {
+    cin >> n;
+    rel.assign(n+1, vector<int>());
+    rumor.assign(n+1, false);
+    ans.assign(n+1, -1);
+    for (int i = 1; i <= n; i++) {
+        int t;
+        while (cin >> t && t){
+            rel[i].push_back(t);
+        }
+    }
     cin >> m;
     for (int i = 0; i < m; i++) {
+        int t;
         cin >> t;
-        trust[t] = true;
+        rumor[t] = true;
     }
+
+    solve();
 
     for (int i = 1; i <= n; i++) {
-        if (trust[i]) {
-            int len = relation[i].size();
-            for (int j = 0; j < len; j++) {
-                trust_cnt[relation[i][j]]++;
-                check.push(relation[i][j]);
-            }
-        }
-    }
-    while (!check.empty()) {
-        int p = check.front();
-        check.pop();
-        if (trust[p]) {
-            continue;
-        }
-        if (trust_cnt[p] >= (relation[p].size()+1) / 2) {
-            trust[p] = true;
-
-            for (int i = 0; i < relation[p].size(); i++) {
-                if (trust[relation[p][i]]) continue;
-                trust_cnt[relation[p][i]]++;
-                check.push(relation[p][i]);
-            }
-        }
-
-    }
-
-    for (int i = 1; i <= n; i++) {
-        if (!trust[i]) {
-            answer[i] = -1;
-        }
-    }
-
-    for (int i = 1; i <= n; i++) {
-        cout << answer[i] << ' ';
+        cout << ans[i] << ' ';
     }
 }
