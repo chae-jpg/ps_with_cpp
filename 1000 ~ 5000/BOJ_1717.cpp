@@ -41,6 +41,4 @@ int main() {
         cin >> a >> b >> c;
         solve();
     }
-
-
 }
