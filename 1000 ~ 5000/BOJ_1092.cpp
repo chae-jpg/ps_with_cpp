@@ -1,50 +1,52 @@
-//배 - 골드 5
-
-#include <iostream>
-#include <vector>
-#include <algorithm>
+// 배 - 골드 5
+#include <bits/stdc++.h>
 
 using namespace std;
 
+int n, m;
+vector<int> crane,cargo;
+
+int solve() {
+    int cnt = 0, loaded = 0;
+    bool flag;
+    if (cargo[m-1] > crane[n-1]) {
+        return -1;
+    }
+    while (!cargo.empty()) {
+        loaded = 0;
+        flag = false;
+
+        for (int i = cargo.size() - 1; i >= 0; i--) {
+            if (loaded == n) break;
+            for (int j = n-1-loaded; j >= 0; j--) {
+                if (cargo[i] > crane[j]) continue;
+                else {
+                    loaded++;
+                    cargo.erase(cargo.begin() + i);
+                }
+                break;
+            }
+        }
+
+        cnt++;
+    }
+    return cnt;
+}
+
+
+
 int main() {
-    int n, m;
-    vector<int> crane, box;
     cin >> n;
     crane.assign(n, 0);
     for (int i = 0; i < n; i++) {
         cin >> crane[i];
     }
-    sort(crane.begin(), crane.end());
     cin >> m;
-    box.assign(m, 0);
+    cargo.assign(m, 0);
     for (int i = 0; i < m; i++) {
-        cin >> box[i];
+        cin >> cargo[i];
     }
-    sort(box.begin(), box.end());
-
-    //가장 무거운 박스의 무게가 크레인의 무게 제한보다 클 때 -> 옮길 수 없음.
-    if (box[m-1] > crane[n-1]) {
-        cout << -1;
-        return 0;
-    }
-
-    int l = 0, r = box.size()-1, cnt = 0;
-
-    while (l <= r) {
-        int l_c = 0, r_c = n-1;
-
-        while (box[r] <= crane[r_c] && r_c >= 0 && r >= 0) {
-            r--; r_c--;
-        }
-        if (r_c < 0) {
-            cnt++;
-            continue;
-        }
-        while (box[l] <= crane[l_c] && l_c <= r_c && l < n) {
-            l++; l_c++;
-        }
-        cnt++;
-    }
-    cout << cnt;
-
+    sort(crane.begin(), crane.end());
+    sort(cargo.begin(), cargo.end());
+    cout << solve();
 }
