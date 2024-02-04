@@ -36,7 +36,7 @@ int main() {
         else if (r_len <= screen_len / 2.0)
             printf("%.2f\n", sum[n-1] - screen_len);
         else {
-            printf("%.2f\n", min(sum[n-1] - screen_len, l_len - screen_len / 2.0));
+            printf("%.2f\n", l_len - screen_len / 2.0);
         }
     }
 
