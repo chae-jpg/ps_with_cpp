@@ -1,12 +1,12 @@
+//Dance Dance Revolution - 골드 3
+
 #include <bits/stdc++.h>
 
 using namespace std;
 
 const int INF = 1e9+7;
-
-int n;
-vector<int> seq;
-vector<vector<int>> dp;
+vector<vector<vector<int>>> dp;
+int seq[100000];
 
 int calcPow(int cur, int next) {
     if (cur == next) return 1;
@@ -33,80 +33,33 @@ int calcPow(int cur, int next) {
     }
 }
 
-pair<int, int> getCoor(int cur) {
-    switch(cur) {
-        case 0 :
-            return make_pair(0, 0);
-            break;
-        case 1 :
-            return make_pair(0, 1);
-            break;
-        case 2 :
-            return make_pair(0, 2);
-            break;
-        case 3 :
-            return make_pair(0, 3);
-            break;
-        case 4 :
-            return make_pair(0, 4);
-            break;
-        case 5 :
-            return make_pair(1, 2);
-            break;
-        case 6 :
-            return make_pair(1, 3);
-            break;
-        case 7 :
-            return make_pair(1, 4);
-            break;
-        case 8 :
-            return make_pair(2, 3);
-            break;
-        case 9 :
-            return make_pair(2, 4);
-            break;
-        case 10 :
-            return make_pair(3, 4);
-            break;
-
-    }
-
-
-}
-
 int main() {
-    int t;
-    while (cin >>t && t) {
-        seq.push_back(t);
+    int t, idx = 0;
+    while (cin >> t && t) {
+        seq[idx++] = t;
     }
-    n = seq.size();
-    dp.assign(n+1, vector<int>(11, 0));
 
-    dp[1][seq[0]] = 2;
+    dp.assign(idx+1, vector<vector<int>> (5, vector<int> (5, INF)));
 
-    for (int i = 1; i < n; i++) {
-        int cur = seq[i];
-        for (int j = 0; j < 11; j++) {
-            pair<int, int> coor = getCoor(j);
-            if (coor.first != cur && coor.second != cur) continue;
+    dp[0][0][0] = 0;
 
-            int score = INF;
-            for (int k = 0; k < 11; k++) {
-                if (!dp[i][k]) continue;
-                pair<int, int> bef_coor = getCoor(k);
-                if (bef_coor.first != seq[i-1] && bef_coor.second != seq[i-1]) continue;
-                if (k == j) score = min(score, dp[i][k] + 1);
-                else score = min(score, dp[i][k] + ((bef_coor.first != cur)? calcPow(bef_coor.first, cur) : calcPow(bef_coor.second, cur)));
+    for (int i = 0; i < idx; i++) {
+        int next = seq[i];
+        for (int j = 0; j < 5; j++) {
+            for (int k = 0; k < 5; k++) {
+                if (dp[i][j][k] == INF) continue;
+                int l = j, r = k;
+                int l_move = calcPow(l, next), r_move = calcPow(r, next);
+                dp[i+1][l][next] = min(dp[i+1][l][next], dp[i][l][r] + r_move);
+                dp[i+1][next][r] = min(dp[i+1][next][r], dp[i][l][r] + l_move);
             }
-            dp[i+1][j] = score;
         }
     }
     int ans = INF;
-    for (int i = 0; i < 11; i++) {
-        if (!dp[n][i]) continue;
-        ans = min(dp[n][i], ans);
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 5; j++) {
+            ans = min(ans, dp[idx][i][j]);
+        }
     }
-
     cout << ans;
-
 }
