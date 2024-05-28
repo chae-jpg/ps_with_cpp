@@ -1,32 +1,25 @@
-#include <iostream>
-#include <vector>
+#include <bits/stdc++.h>
 
 using namespace std;
 
-typedef pair <int, int> pi;
-
-vector<bool> visited;
-unsigned long long int answer = 0;
-
-void backtrack(int start, vector<pi>& consulting) {
-
-
-
-}
+typedef pair<int, int> pi;
 
 int main() {
     int n;
-    vector<pi> consulting;
     cin >> n;
-    consulting.assign(n+1, {0, 0});
-    visited.assign(n+1, false);
+    vector<int> dp(n+2, 0);
+    vector<pi> v(n+1, {0, 0});
 
     for (int i = 1; i <= n; i++) {
-        cin >> consulting[i].first >> consulting[i].second;
+        cin >> v[i].first >> v[i].second;
     }
-
-    backtrack(1, consulting);
-    cout << answer;
-
-
+    dp[0] = 0;
+    for (int i = 1; i <= n; i++) {
+        int next = v[i].first, w = v[i].second;
+        dp[i] = max(dp[i-1], dp[i]);
+        if (i + next <= n+1) {
+            dp[i+next] = max(dp[i+next], dp[i]+w);
+        }
+    }
+    cout << max(dp[n], dp[n+1]);
 }
