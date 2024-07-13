@@ -9,6 +9,9 @@ bool comp(string a, string b) {
 }
 
 int main() {
+    ios_base ::sync_with_stdio(false);
+    cin.tie(NULL); cout.tie(NULL);
+
     int t, n;
     cin >> t;
     while (t--) {
@@ -21,14 +24,13 @@ int main() {
         }
         sort(v.begin(), v.end(), comp);
 
-        vector<vector<int>> trie(v[n-1].length() + 1, vector<int> (10, 0));
+        vector<vector<int>> trie(12, vector<int> (10, 0));
 
         for (auto s : v) {
             bool prev = true;
             int idx = 1;
             for (int i = 0; i < s.length(); i++) {
                 char c = s[i];
-                if (c == ' ') continue;
                 if (trie[idx][c-'0'] == 0) prev = false;
                 if (trie[idx][c-'0'] == 2 && prev) {
                     flag = false;

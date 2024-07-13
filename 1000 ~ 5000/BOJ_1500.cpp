@@ -1,5 +1,4 @@
 #include <iostream>
-#include <vector>
 
 using namespace std;
 
@@ -9,15 +8,10 @@ int main() {
 
     cin >> s >> k;
 
-    vector<int> arr(k, s/k);
-    int remain = s % k;
-
-    for (int i = 0; i < remain; i++) {
-        arr[i]++;
+    for (int i = 0; i < k; i++) {
+        if (i < s%k) answer *= (s/k) + 1;
+        else answer *= (s/k);
     }
 
-    for (int n : arr) {
-        answer *= n;
-    }
     cout << answer;
 }

@@ -39,7 +39,5 @@ int main() {
     }
     sort(arr.begin(), arr.end());
 
-
     backtrack(0, m, n);
-
 }
