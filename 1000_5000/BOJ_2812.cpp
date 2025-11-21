@@ -1,3 +1,11 @@
-//
-// Created by Chae Won Lee on 2024. 7. 14..
-//
+// 크게 만들기 - 골드 3
+
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int main() {
+
+
+
+}
